@@ -8,7 +8,7 @@ Actor/Policy-Gradient:
 $$\nabla_{\theta}\widehat{R(\tau)}\approx\frac{1}{N}\sum_{n=1}^N\sum_{t=1}^NR({\tau}^n)\nabla_{\theta}log{P(a_{t}^{n}|s_{t}^{n};\theta)}$$
 
 Critic/DQN:
-$$Q^\pi(s_{t},a_{t};\theta)\leftarrowr_{t}+\gamaQ^\pi(s_{t+1},a_{t+1};\theta)$$
+$$Q^\pi(s_{t},a_{t};\theta){\leftarrow}r_{t}+{\gama}Q^\pi(s_{t+1},a_{t+1};\theta)$$
 
 ## Introduction
 
