@@ -10,7 +10,9 @@ $$J(\theta)\approx\frac{1}{N}\sum_{n=1}^N\sum_{t=1}^NR({\tau}^n)\nabla_{\theta}l
 Critic/DQN:[(more details)](https://github.com/LazyPool/lazyGO/blob/main/Critic.md)
 $$Q^\pi(s_{t},a_{t};\theta){\leftarrow}r_{t}+{\gamma}\underset{a}{\max}Q^\pi(s_{t+1},a_{t+1};\theta)$$
 
-In this program, 
+So the AC is exactly the combination of the Actor and Critic, hence usually needs to train 2 neural networks, one of which is used to simulate the Actor, while the other one of which is used to simulate the Critic. So the key problem is how to make the two interact with each other and finally converge to a nice balance point, where the agent perform as expected.
+
+In this program, I will try to train a simple AI based on the Actor-Critic framework.
 
 ## Introduction
 
