@@ -15,7 +15,9 @@ So the AC is exactly the combination of the Actor and Critic. In Actor, we use t
 Actor-Critic:[(more details)](https://github.com/LazyPool/lazyGO/blob/main/Actor-Critic.md)
 $$J(\theta)\approx\frac{1}{N}\sum_{n=1}^N\sum_{t=1}^TQ^\pi(s_{t}^{n},a_{t}^{n};\omega)\nabla_{\theta}log{P(a_{t}^{n}|s_{t}^{n};\theta)}$$
 
-In this program, I will try to train a simple AI based on the Actor-Critic framework.
+In this program, I will try to train a simple AI based on the Actor-Critic framework. The AI is designed to play a very easy game, which is the Gobang with a only 8x8 board. The agent will try to interact with the board and train 2 network to learn how to win the Gobang. The network is designed to build using pytorch package, there some particulars such as how to make the agent be able to interact with the envrionment and how the envirionment update its state etc.
+
+In "Introduction", the program's components will be present and elaborated carefully, where show the conception about this program and the links among the components so that could guide the clearer method disign. In "Method", I would like to show my details design about every components and even show some the pseudo-code. In "Result", there would be some expriments for the trained AI so that we can estimate its talence. At last, in "Discussion", we may discuss some problems and try to deeply analyse this program's advantage and disadvantages.
 
 ## Introduction
 
