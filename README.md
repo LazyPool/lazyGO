@@ -88,7 +88,7 @@ Critic-net accept 8x8x2 matric and a tuple of 3 int the return a float.
     - b) $a_{t+1}=\pi(·|s_{t+1};\theta)$
     - c) $q_{t}=Q^\pi(s_{t},a_{t};\omega)$ &nbsp; $q_{t+1}=Q^\pi(s_{t+1},a_{t+1};\omega)$
     - d) $\delta_{t}=q_{t}-(r_{t}+{\gamma}q_{t+1})$
-    - e) $d_{\theta,t}=\frac{\partial{log{\pi(a_{t}|s_{t};\theta)}}}{\partial{\theta}}$ &nbsp; $d_{\omega,t}=\frac{\partial{\Q^\pi(s_{t},a_{t};\omega)}}{\partial{\omega}}$
+    - e) $d_{\theta,t}=\frac{\partial{log{\pi(a_{t}|s_{t};\theta)}}}{\partial{\theta}}$ &nbsp; $d_{\omega,t}=\frac{\partial{Q^\pi(s_{t},a_{t};\omega)}}{\partial{\omega}}$
     - f) $\theta_{new}=\theta_{now}+{\alpha}\cdot{q_{\delta_{t}}}\cdot{d_{\theta,t}}$ &nbsp; $\omega_{new}=\omega_{now}+{\beta}\cdot{q_{\delta_{t}}}\cdot{d_{\omega,t}}$
     - g) repeate options above until the $N\times(s_{t}, a_{t}, r_{t}, s_{t+1})$ all selected.
 - 5.Store the 2 module's parameters.
