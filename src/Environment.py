@@ -1,12 +1,12 @@
-import numpy as np
+import torch
 
 class Environment:
     def __init__(self):
-        self.board = np.zeros((2, 8, 8))
+        self.board = torch.zeros((2, 8, 8))
 
     def perform(self, action):
         # place the chess
-        x, y, z = action[0], action[1], action[2]
+        z, y, x = action[0], action[1], action[2]
         self.board[z][y][x] += 1
 
         # return the reward and terminal
@@ -32,8 +32,8 @@ class Environment:
 
     def unlegal(self):
         # statistics
-        count1 = self.board.sum(axis=0)
-        count2 = self.board.sum(axis=(1,2))
+        count1 = torch.sum(self.board, 0)
+        count2 = torch.sum(self.board, (1,2))
         
         # if a chess conflict
         if 2 in count1:
@@ -79,3 +79,6 @@ class Environment:
 
     def clear(self):
         self.board *= 0
+
+    def getState(self):
+        return self.board.flatten()
