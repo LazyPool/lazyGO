@@ -4,8 +4,8 @@ from torch import nn
 inputDim = 2*8*8+3
 outputDim = 1
 
-class Critic(nn.Moudule):
-    def __init():
+class Critic(nn.Module):
+    def __init__(self):
         super(Critic, self).__init__()
         self.layers = nn.Sequential(
             nn.Linear(inputDim, 128),
