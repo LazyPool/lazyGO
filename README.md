@@ -64,7 +64,7 @@ Actor-net is a neral-network based on the module API in pytorch.
 
 - 2 hidden layer(liner + relu);
 - a softmax layer;
-- $\theta\leftarrow\theta+\alpha\J(\theta)$
+- $\theta\leftarrow\theta+{\alpha}J(\theta)$
 
 Actor-net accept 8x8x2 matric and return a new 8x8x2 matric.
 
@@ -74,7 +74,7 @@ Critic-net is a neral-network based on the module API in pytorch.
 
 - a concat option;
 - 2 hidden layer(liner + relu);
-- $\omega\leftarrow\omega-\beta\TD-error$
+- $\omega\leftarrow\omega-{\beta}TD-error$
 
 Critic-net accept 8x8x2 matric and a tuple of 3 int the return a float.
 
@@ -82,15 +82,15 @@ Critic-net accept 8x8x2 matric and a tuple of 3 int the return a float.
 ### Training Process
 - 1.Create an Environment and an Agent instance.
 - 2.Let the Agent play the Game for some times.
-- 3.Sample form the Buffer, obtain &N\times(s_{t}, a_{t}, r_{t}, s_{t+1})&.
+- 3.Sample form the Buffer, obtain $N\times(s_{t}, a_{t}, r_{t}, s_{t+1})$.
 - 4.Update the parameters of the Actor-net and the Critic-net, like this:
-    - a) select a 4-int tuple form &N\times(s_{t}, a_{t}, r_{t}, s_{t+1})&, assert it's &(s_{t}, a_{t}, r_{t}, s_{t+1})&
+    - a) select a 4-int tuple form $N\times(s_{t}, a_{t}, r_{t}, s_{t+1})$, assert it's $(s_{t}, a_{t}, r_{t}, s_{t+1})$
     - b) $a_{t+1}=\pi(·|s_{t+1};\theta)$
-    - c) $q_{t}=Q^\pi(s_{t},a_{t};\omega)$&nbmp;$q_{t+1}=Q^\pi(s_{t+1},a_{t+1};\omega)$
-    - d) $\epsilon_{t}=q_{t}-(r_{t}+{\gamma}q_{t+1})$
-    - e) $d_{\theta,t}=\frac{\partial{log{\pi(a_{t}|s_{t};\theta)}}{\partial{\theta}}$&nbmp;$d_{\omega,t}=\frac{\partial{\pi(s_{t},a_{t};\omega)}{\partial{\omega}}$
-    - f) $\theta_{new}=\theta_{now}+{\alpha}\dot{q_{\epsilon_{t}}}\dot{d_{\theta,t}}$&nbmp;$\omega_{new}=\omega_{now}+{\beta}\dot{q_{\epsilon_{t}}}\dot{d_{\omega,t}}$
-    - g) repeate options above until the &N\times(s_{t}, a_{t}, r_{t}, s_{t+1})& all selected.
+    - c) $q_{t}=Q^\pi(s_{t},a_{t};\omega)$&nbsp;$q_{t+1}=Q^\pi(s_{t+1},a_{t+1};\omega)$
+    - d) $\delta_{t}=q_{t}-(r_{t}+{\gamma}q_{t+1})$
+    - e) $d_{\theta,t}=\frac{\partial{log{\pi(a_{t}|s_{t};\theta)}}{\partial{\theta}}$&nbsp;$d_{\omega,t}=\frac{\partial{\pi(s_{t},a_{t};\omega)}{\partial{\omega}}$
+    - f) $\theta_{new}=\theta_{now}+{\alpha}\dot{q_{\delta_{t}}}\dot{d_{\theta,t}}$&nbmp;$\omega_{new}=\omega_{now}+{\beta}\dot{q_{\delta_{t}}}\dot{d_{\omega,t}}$
+    - g) repeate options above until the $N\times(s_{t}, a_{t}, r_{t}, s_{t+1})$ all selected.
 - 5.Store the 2 module's parameters.
 
 
