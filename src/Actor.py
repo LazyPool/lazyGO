@@ -7,7 +7,6 @@ outputDim = 2*8*8
 class Actor(nn.Module):
     def __init__(self):
         super(Actor, self).__init__()
-        self.flatten = nn.Flatten()
         self.layers = nn.Sequential(
             nn.Linear(inputDim, 128),
             nn.ReLU(),
@@ -17,7 +16,6 @@ class Actor(nn.Module):
         self.softmax = nn.Softmax(0) 
 
     def forward(self, x):
-        #x = self.flatten(x)
         logits = self.layers(x)
         res = self.softmax(logits)
         return res
