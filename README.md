@@ -99,38 +99,84 @@ Critic-net accept 8x8x2 matric and a tuple of 3 int the return a float.
 ### Class Environment
 ```python
 class Environment:
-    def __init__(self, imFirst):
-        self.board = [[[0 for i in range(8)] for j in range(8)] for k in range(2)]
+    def __init__(self):
+        self.board = np.zeros((2, 8, 8))
 
     def perform(self, action):
-        int x, y, z = action[0], action[1], action[2]
+        # place the chess
+        x, y, z = action[0], action[1], action[2]
         self.board[z][y][x] += 1
-        return reward(), terminal()
 
-    def reward(self):
-        if unlegal():
-            return -999
-        if linked():
-            return 999
-        return 0
+        # return the reward and terminal
+        return self.feedback()
 
-    def terminal(self):
-        if linked(board[0]) or linked(board[1]):
-            return true
-        return false
+    def feedback(self):
+        # judge if unlegal or linked
+        unlegal = self.unlegal()
+        linked = self.linked()
+
+        # caculate reward
+        reward = 0
+        if unlegal:
+            reward = -999
+        if linked:
+            reward = 999
+
+        # judge if terminal
+        terminal = unlegal or linked
+
+        # return result
+        return reward, terminal
 
     def unlegal(self):
-        if black != white:
-            return true
-        if 2 in self.board:
-            return true
-        return false
+        # statistics
+        count1 = self.board.sum(axis=0)
+        count2 = self.board.sum(axis=(1,2))
+        
+        # if a chess conflict
+        if 2 in count1:
+            return True
+
+        # if order wrong
+        delta = count2[0] - count2[1]
+        if delta < 0 or delta > 1:
+            return True
+
+        # if legal
+        return False
 
     def linked(self):
-        #TO DO
+        board = self.board[0] - self.board[1]
+
+        # judge row
+        for i in range(8):
+            for j in range(4):
+                if board[i][j] == board[i][j+1] == board[i][j+2] == board[i][j+3] == board[i][j+4] != 0:
+                    return True
+
+        # judge col
+        for j in range(8):
+            for i in range(4):
+                if board[i][j] == board[i+1][j] == board[i+2][j] == board[i+3][j] == board[i+4][j] != 0:
+                    return True
+
+        # judge left>right
+        for i in range(4):
+            for j in range(4):
+                if board[i][j] == board[i+1][j+1] == board[i+2][j+2] == board[i+3][j+3] == board[i+4][j+4] != 0:
+                    return True
+
+        # judge left<right
+        for i in range(4, 8):
+            for j in range(4):
+                if board[i][j] == board[i-1][j+1] == board[i-2][j+2] == board[i-3][j+3] == board[i-4][j+4] != 0:
+                    return True
+
+        # not linked
+        return False
 
     def clear(self):
-        #TO DO
+        self.board *= 0
 ```
 
 
