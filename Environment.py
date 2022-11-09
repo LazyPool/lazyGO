@@ -5,14 +5,17 @@ class Environment:
     def perform(self, action):
         int x, y, z = actioin[0], action[1], action[2]
         self.board[z][y][x] += 1
-        return reward(), terminal()
+        return self.feedback()
 
-    def reward(self):
-        if self.unlegal():
-            return -999
-        if self.linked():
-            return 999
-        return 0
+    def feedback(self):
+        unlegal = self.unlegal()
+        linked = self.linked()
+        if unlegal:
+            reward = -999
+        if linked():
+            reward = 999
+        terminal = unlegal or linked
+        return reward, terminal
 
     def unlegal(self):
         if sum(black) != sum(white):
