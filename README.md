@@ -94,8 +94,106 @@ Critic-net accept 8x8x2 matric and a tuple of 3 int the return a float.
 - 5.Store the 2 module's parameters.
 
 
+
 ## Method
+### Class Environment
+```python
+class Environment:
+    def __init__(self, imFirst):
+        self.board = [[[0 for i in range(8)] for j in range(8)] for k in range(2)]
+        self.isFirst = imFirst
+
+    def perform(self, action):
+        int x, y, z = action[0], action[1], action[2]
+        self.board[z][y][x] += 1
+        return reward(), terminal()
+
+    def reward(self):
+        if 2 in self.board:
+            return -999
+        if isFirst and linked(board[0]):
+            return 999
+        if not isFirst and linked(board[1]):
+            return 999
+        return 0
+
+    def terminal(self):
+        if linked(board[0]) or linked(board[1]):
+            return true
+        return false
+
+    def linked(self, board)
+
+    def clear(self)
+```
+
+
+### Class Agent
+```python
+class Agent:
+    def __init__(self, env, policy, buffer):
+        self.playground = env
+        self.policy = policy
+        self.buffer = buffer.read()
+
+    def play(self)
+        terminal = false
+        while(not terminal):
+            state1 = playground.board
+            action = select(policy(state))
+            reward, terminal = playground.perform(action)
+            state2 = playground.board
+            buffer.update(state1, action, reward, state2)
+```
+
+
+### Class Actor
+```python
+class Actor(nn.Module):
+    def __init__(self):
+        super(Actor, self).__init__()
+        self.flatten = nn.Flatten()
+        self.layers = nn.Sequential(
+            nn.Linear(8*8*2, 128),
+            nn.ReLU(),
+            nn.Linear(128, 128),
+            nn.ReLU(),
+            nn.Linear(128, 8*8*2),
+        )
+    
+    def forward(self, x):
+        x = self.flatten(x)
+        logits = self.layers(x)
+        return logits
+```
+
+
+### Class Critic
+```python
+class Critic(nn.Module):
+    def __init__(self):
+        super(Actor, self).__init__()
+        self.flatten = nn.Flatten()
+        self.layers = nn.Sequential(
+            nn.Linear(8*8*2+3, 128),
+            nn.ReLU(),
+            nn.Linear(128, 128),
+            nn.ReLU(),
+            nn.Linear(128, 1),
+        )
+    
+    def forward(self, x):   #Remember concat before input!
+        x = self.flatten(x)
+        logits = self.layers(x)
+        return logits
+```
+
+
+### Func Traing
+
 
 ## Result
+
+
 
 ## Discussion
