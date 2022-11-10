@@ -1,4 +1,5 @@
 import torch
+import copy
 
 class Environment:
     def __init__(self):
@@ -7,7 +8,7 @@ class Environment:
     def perform(self, action):
         # place the chess
         z, y, x = action[0], action[1], action[2]
-        self.board[z][y][x] += 8
+        self.board[z][y][x] += 1
 
         # return the reward and terminal
         return self.feedback()
@@ -81,4 +82,4 @@ class Environment:
         self.board *= 0
 
     def getState(self):
-        return self.board.flatten()
+        return copy.deepcopy(self.board.flatten())
