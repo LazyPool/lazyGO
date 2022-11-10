@@ -1,85 +1,71 @@
-import torch
 import copy
+import torch
+
+
 
 class Environment:
     def __init__(self):
-        self.board = torch.zeros((2, 8, 8))
+        self.sDim = 8*8
+        self.aDim = 8*8
+        self.board = torch.zeros((8, 8))
+    
 
-    def perform(self, action):
-        # place the chess
-        z, y, x = action[0], action[1], action[2]
-        self.board[z][y][x] += 1
+    def reset(self):
+        self.board *= 0
+        return copy.deepcopy(self.board)
 
-        # return the reward and terminal
+
+    def step(self, action):
+        board = self.board.view(-1)
+        board[action] += 1
         return self.feedback()
 
+
     def feedback(self):
-        # judge if unlegal or linked
+        state2 = copy.deepcopy(self.board)
+
         unlegal = self.unlegal()
         linked = self.linked()
 
-        # caculate reward
         reward = 0
-        if unlegal:
-            reward = -999
         if linked:
             reward = 999
+        if unlegal:
+            reward = -999
 
-        # judge if terminal
         terminal = unlegal or linked
 
-        # return result
-        return reward, terminal
+        return state2, reward, terminal
+
 
     def unlegal(self):
-        # statistics
-        count1 = torch.sum(self.board, 0)
-        count2 = torch.sum(self.board, (1,2))
-        
-        # if a chess conflict
-        if 2 in count1:
+        if 2 in self.board:
             return True
 
-        # if order wrong
-        delta = count2[0] - count2[1]
-        if delta < 0 or delta > 1:
-            return True
-
-        # if legal
         return False
 
-    def linked(self):
-        board = self.board[0] - self.board[1]
 
-        # judge row
+    def linked(self):
+        board = self.board
+
         for i in range(8):
             for j in range(4):
                 if board[i][j] == board[i][j+1] == board[i][j+2] == board[i][j+3] == board[i][j+4] != 0:
                     return True
 
-        # judge col
         for j in range(8):
             for i in range(4):
                 if board[i][j] == board[i+1][j] == board[i+2][j] == board[i+3][j] == board[i+4][j] != 0:
                     return True
 
-        # judge left>right
         for i in range(4):
             for j in range(4):
                 if board[i][j] == board[i+1][j+1] == board[i+2][j+2] == board[i+3][j+3] == board[i+4][j+4] != 0:
                     return True
 
-        # judge left<right
         for i in range(4, 8):
             for j in range(4):
                 if board[i][j] == board[i-1][j+1] == board[i-2][j+2] == board[i-3][j+3] == board[i-4][j+4] != 0:
                     return True
 
-        # not linked
         return False
-
-    def clear(self):
-        self.board *= 0
-
-    def getState(self):
-        return copy.deepcopy(self.board.flatten())

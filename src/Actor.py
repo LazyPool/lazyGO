@@ -1,28 +1,31 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.distributions import Categorical
+from Hypers import *
 
 
 
 class PGNetwork(nn.Module):
     def __init__(self, sDim, aDim):
         super(PGNetwork, self).__init__()
-        self.fc1 = nn.Linear(sDim, 20)
-        self.fc2 = nn.Linear(20, aDim)
+        self.fc1 = nn.Linear(sDim, 128)
+        self.fc2 = nn.Linear(128, aDim)
+
 
 
     def forward(self, x):
-        x = F.relu(self.fc1(x))
-        aScore = self.fc2(x)
-        aProb = F.softmax(aProb, dim=1)
-        return res
+        out = F.relu(self.fc1(x))
+        aScore = self.fc2(out)
+        aProb = F.softmax(aScore, dim=0)
+        return aProb
 
 
 
 class Actor(object):
     def __init__(self, env):
-        self.sDim = 2*8*8
-        self.aDim = 2*8*8
+        self.sDim = env.sDim
+        self.aDim = env.aDim
 
         self.network = PGNetwork(self.sDim, self.aDim)
 
@@ -30,21 +33,24 @@ class Actor(object):
         self.lFN = torch.nn.NLLLoss()
 
 
+
     def selectA(self, state):
-        state = state.unsqueeze(0)
+        state = state.reshape(-1)
         aProb = self.network(state)
 
-        m = Categorical(aProb)
-        a = m.sample()
+        self.m = Categorical(aProb)
+        a = self.m.sample()
 
         return a.item()
 
 
     def learn(self, state, action, TD_error):
-        state = state.unsqueeze(0)
+        state = state.reshape(-1)
         aProb = self.network(state)
 
-        negLog = self.lFN(torch.log(aProb), action)
+        action = torch.LongTensor([action])
+
+        negLog = self.lFN(torch.log(aProb).unsqueeze(0), action)
 
         loss = negLog * TD_error
 

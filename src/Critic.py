@@ -1,14 +1,15 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from Hypers import *
 
 
 
 class QNetwork(nn.Module):
     def __init__(self, sDim, aDim):
         super(QNetwork, self).__init__()
-        self.fc1 = nn.Linear(sDim, 20)
-        self.fc2 = nn.Linear(20, 1)
+        self.fc1 = nn.Linear(sDim, 128)
+        self.fc2 = nn.Linear(128, 1)
 
     def forward(self, x):
         out = F.relu(self.fc1(x))
@@ -19,8 +20,8 @@ class QNetwork(nn.Module):
 
 class Critic(object):
     def __init__(self, env):
-        self.sDim = 2*8*8
-        self.aDim = 2*8*8
+        self.sDim = env.sDim
+        self.aDim = env.aDim
 
         self.network = QNetwork(self.sDim, self.aDim)
 
@@ -29,7 +30,7 @@ class Critic(object):
 
 
     def trainQnet(self, state1, reward, state2):
-        s1, s2 = state1, state2
+        s1, s2 = state1.reshape(-1), state2.reshape(-1)
 
         v1 = self.network(s1)
         v2 = self.network(s2).detach()
