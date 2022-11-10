@@ -1,20 +1,46 @@
 import torch
-from torch import nn
+import torch.nn as nn
+import torch.nn.functional as F
 
-inputDim = 2*8*8+3
-outputDim = 1
 
-class Critic(nn.Module):
-    def __init__(self):
-        super(Critic, self).__init__()
-        self.layers = nn.Sequential(
-            nn.Linear(inputDim, 128),
-            nn.ReLU(),
-            nn.Linear(128, 128),
-            nn.ReLU(),
-            nn.Linear(128, outputDim))
-    
+
+class QNetwork(nn.Module):
+    def __init__(self, sDim, aDim):
+        super(QNetwork, self).__init__()
+        self.fc1 = nn.Linear(sDim, 20)
+        self.fc2 = nn.Linear(20, 1)
+
     def forward(self, x):
-        logits = self.layers(x)
-        res = logits
+        out = F.relu(self.fc1(x))
+        res = self.fc2(out)
         return res
+
+
+
+class Critic(object):
+    def __init__(self, env):
+        self.sDim = 2*8*8
+        self.aDim = 2*8*8
+
+        self.network = QNetwork(self.sDim, self.aDim)
+
+        self.optimizer = torch.optim.Adam(self.network.parameters(), lr=LR)
+        self.lFN = nn.MSELoss()
+
+
+    def trainQnet(self, state1, reward, state2):
+        s1, s2 = state1, state2
+
+        v1 = self.network(s1)
+        v2 = self.network(s2).detach()
+
+        loss = self.lFN(reward + GAMMA * v2, v1)
+
+        self.optimizer.zero_grad()
+        loss.backward()
+        self.optimizer.step()
+
+        with torch.no_grad():
+            TD_error = reward + GAMMA * v2 - v1
+
+        return TD_error
