@@ -10,11 +10,6 @@ import numpy as np
 
 
 def train():
-    gamma = 0.99
-    lr = 0.02
-    betas = (0.9, 0.999)
-    
-    random_seed = 543
     torch.manual_seed(random_seed)
     
     env = gym.make("lazyGO-v0", render_mode="human")
