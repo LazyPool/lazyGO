@@ -1,7 +1,8 @@
-from module import ActorCritic
+from model import ActorCritic
 import torch
 import torch.optim as optim
 import gym
+import gobang
 from const import *
 import sys
 
