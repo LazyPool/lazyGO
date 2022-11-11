@@ -12,20 +12,20 @@ class lazyGO(gym.Env):
         self.size = 8
         self.windowsize = 512
 
-        self.observation_space = spaces.multi_discrete.MultiDiscrete([[0,self.size**2-1],[0,2]])
-        self.action_space = spaces.multi_discrete.Discrete(self.size**2)
+        self.observation_space = spaces.MultiDiscrete(np.ones((self.size, self.size))*3)
+        self.action_space = spaces.Discrete(self.size**2)
 
-        assert render_mode is None or render_mode in self.metadata["render_mode"]
-        self.render_mode = reder_mode
+        assert render_mode is None or render_mode in self.metadata["render_modes"]
+        self.render_mode = render_mode
 
         self.window = None
         self.clock = None
 
 
     def reset(self, seed=None, options=None):
-        super.reset(seed=seed)
+        super().reset(seed=seed)
 
-        self._board = np.array([0 for c in range(self.size)] for r in range(self.size))
+        self._board = np.array([[0 for c in range(self.size)] for r in range(self.size)])
 
         observation = self._get_obs()
         info = self._get_info()
@@ -47,8 +47,8 @@ class lazyGO(gym.Env):
         self._board[row][col] = 1
 
         while True:
-            row = self.np_random.intergers(0, self.size, size=1, dtype=int)
-            col = self.np_random.intergers(0, self.size, size=1, dtype=int)
+            row = self.np_random.integers(0, self.size, size=1, dtype=int).item()
+            col = self.np_random.integers(0, self.size, size=1, dtype=int).item()
             if self._board[row][col] == 0: break
 
         self._board[row][col] = 2
@@ -56,6 +56,9 @@ class lazyGO(gym.Env):
         observation = self._get_obs()
         reward, terminated = self._get_check()
         info = self._get_info()
+
+        if self.render_mode == "human":
+            self._render_frame()
 
         return observation, reward, terminated, False, info
 
@@ -127,11 +130,11 @@ class lazyGO(gym.Env):
         if self.window is None and self.render_mode == "human":
             pygame.init()
             pygame.display.init()
-            self.window = pygame.display.set_mode(self.windowsize, self.windowsize)
+            self.window = pygame.display.set_mode((self.windowsize, self.windowsize))
         if self.clock is None and self.render_mode == "human":
-            self.clock = pygame.time.clock()
+            self.clock = pygame.time.Clock()
 
-        canvas = pygame.Surface(self.windowsize, self.windowsize)
+        canvas = pygame.Surface((self.windowsize, self.windowsize))
         canvas.fill((255,255,255))
         pix_square_size = self.windowsize / self.size
 
@@ -159,14 +162,14 @@ class lazyGO(gym.Env):
                 canvas,
                 0,
                 (0, pix_square_size * x),
-                (self.window_size, pix_square_size * x),
+                (self.windowsize, pix_square_size * x),
                 width=3,
             )
             pygame.draw.line(
                 canvas,
                 0,
                 (pix_square_size * x, 0),
-                (pix_square_size * x, self.window_size),
+                (pix_square_size * x, self.windowsize),
                 width=3,
             )
 
