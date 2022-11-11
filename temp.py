@@ -1,4 +1,4 @@
-import env
+import gobang
 import gym
 
 
