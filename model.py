@@ -7,7 +7,8 @@ from const import *
 
 class ActorCritic(nn.Module):
     def __init__(self):
-        super(ActorCritic, self).__init__()
+        super(ActorCritic, self, sDim, aDim).__init__()
+        self.flatten = nn.Flatten()
         self.affline = nn.Linear(8, 128)
 
         self.action_layer = nn.Linear(128, 4)
@@ -19,6 +20,7 @@ class ActorCritic(nn.Module):
 
 
     def forward(self, state):
+        state = self.flatten(state)
         state = F.relu(self.affline(state))
 
         state_value = self.value_layer(state)
