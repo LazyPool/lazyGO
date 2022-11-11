@@ -3,6 +3,7 @@ import torch
 import gym
 import gobang
 import numpy as np
+import time
 from const import *
 
 
@@ -35,4 +36,4 @@ def test(n_episodes=5, name=None):
 
 
 if __name__ == '__main__':
-    test()
+    test(name='lazyGO_0.02_0.9_0.999.pth')
