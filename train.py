@@ -5,6 +5,7 @@ import gym
 import gobang
 from const import *
 import sys
+import numpy as np
 
 
 
@@ -16,15 +17,17 @@ def train():
     random_seed = 543
     torch.manual_seed(random_seed)
     
-    env = gym.make("LunarLander-v2", render_mode="human")
+    env = gym.make("lazyGO-v0", render_mode="human")
+    sDim = np.array(env.observation_space.sample()).size
+    aDim = env.action_space.n
     
-    policy = ActorCritic().to(device)
+    policy = ActorCritic(sDim, aDim).to(device)
     optimizer = optim.Adam(policy.parameters(), lr=lr, betas=betas)
     
     running_reward = 0
     for i_episode in range(0, 3000):
         print("\r", end="")
-        print("Progress: {}%: ".format(i_episode * 100 // 3000), "▋" * (i_episode * 10 // 3000), end="")
+        print("Progress: {}%: ".format(i_episode * 100 // 3000), "▋" * (i_episode * 100 // 3000), end="")
         sys.stdout.flush()
             
         state, _ = env.reset()
@@ -50,7 +53,7 @@ def train():
         if running_reward > 4000: print("the train stop advancedly!"); break
         if i_episode % 20 == 0: running_reward = 0
         
-    torch.save(policy.state_dict(), "./trained/LunarLand_{}_{}_{}.pth".format(lr, betas[0], betas[1]))
+    torch.save(policy.state_dict(), "./trained/lazyGO_{}_{}_{}.pth".format(lr, betas[0], betas[1]))
     print("====================saved successfully!====================")
 
 

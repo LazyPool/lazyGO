@@ -2,14 +2,17 @@ from model import ActorCritic
 import torch
 import gym
 import gobang
+import numpy as np
 from const import *
 
 
 
 def test(n_episodes=5, name=None):
     env = gym.make('lazyGO-v0', render_mode='human')
+    sDim = np.array(env.observation_space.sample()).size
+    aDim = env.action_space.n
 
-    policy = ActorCritic().to(device)
+    policy = ActorCritic(sDim, aDim).to(device)
     
     if name:
         policy.load_state_dict(torch.load('./trained/{}'.format(name)))

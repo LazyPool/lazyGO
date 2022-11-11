@@ -6,12 +6,12 @@ from const import *
 
 
 class ActorCritic(nn.Module):
-    def __init__(self):
-        super(ActorCritic, self, sDim, aDim).__init__()
-        self.flatten = nn.Flatten()
-        self.affline = nn.Linear(8, 128)
+    def __init__(self, sDim, aDim):
+        super(ActorCritic, self).__init__()
+        self.flatten = nn.Flatten(0)
+        self.affline = nn.Linear(sDim, 128)
 
-        self.action_layer = nn.Linear(128, 4)
+        self.action_layer = nn.Linear(128, aDim)
         self.value_layer = nn.Linear(128, 1)
 
         self.logprobs = []
