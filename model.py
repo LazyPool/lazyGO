@@ -9,10 +9,10 @@ class ActorCritic(nn.Module):
     def __init__(self, sDim, aDim):
         super(ActorCritic, self).__init__()
         self.flatten = nn.Flatten(0)
-        self.affline = nn.Linear(sDim, 128)
+        self.affline = nn.Linear(sDim, 512)
 
-        self.action_layer = nn.Linear(128, aDim)
-        self.value_layer = nn.Linear(128, 1)
+        self.action_layer = nn.Linear(512, aDim)
+        self.value_layer = nn.Linear(512, 1)
 
         self.logprobs = []
         self.state_values = []
@@ -33,7 +33,6 @@ class ActorCritic(nn.Module):
         self.logprobs.append(action_distribution.log_prob(action))
         self.state_values.append(state_value)
 
-        print(action)
         return action.item()
 
 

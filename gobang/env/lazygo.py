@@ -42,7 +42,7 @@ class lazyGO(gym.Env):
         try:
             assert self._board[row][col] == 0, "cannot move"
         except AssertionError:
-            return self._get_obs(), -999, False, False, {}
+            return self._get_obs(), -5, False, False, {}
 
         self._board[row][col] = 1
 
@@ -80,9 +80,9 @@ class lazyGO(gym.Env):
 
     def _get_check(self):
         if self._linked(1):
-            reward, terminated = 10, True
+            reward, terminated = 3, True
         elif self._linked(2):
-            reward, terminated = -10, True
+            reward, terminated = -3, True
         elif self._isfull():
             reward, terminated = 0, True
         else:

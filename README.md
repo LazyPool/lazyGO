@@ -35,8 +35,8 @@ gobang
 
 ```
 
-|:-|:-|
 |Action Space|Discrete(4)|
+|:-|:-|
 |Observation Shape|(8,8)|
 |Observation High|All elements are 2|
 |Observatin Low|All elements are 0|

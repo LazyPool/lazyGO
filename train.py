@@ -12,7 +12,7 @@ import numpy as np
 def train():
     torch.manual_seed(random_seed)
     
-    env = gym.make("lazyGO-v0", render_mode="human")
+    env = gym.make("lazyGO-v0")
     sDim = np.array(env.observation_space.sample()).size
     aDim = env.action_space.n
     
@@ -20,9 +20,11 @@ def train():
     optimizer = optim.Adam(policy.parameters(), lr=lr, betas=betas)
     
     running_reward = 0
-    for episode in range(EPISODE):
+    for episode in range(1, EPISODE+1):
         print("\r", end="")
-        print("Progress: {}%: ".format(episode * 100 // 3000), "▋" * (episode * 100 // 3000), end="")
+        print("Progress: {}%: ".format(episode * 100 // EPISODE),
+              "▋" * (episode * 50 // EPISODE),
+              " " * (50 - (episode * 50 // EPISODE)), end="")
         sys.stdout.flush()
             
         state, _ = env.reset()
@@ -45,8 +47,10 @@ def train():
         optimizer.step()        
         policy.clearMemory()
 
-        if running_reward > 4000: print("the train stop advancedly!"); break
-        if episode % 20 == 0: running_reward = 0
+        if running_reward > 40: print("the train stop advancedly!"); break
+        if episode % 20 == 0: 
+            print("\t\tepisode: {}     average return: {}".format(episode, running_reward/20))
+            running_reward = 0
         
     torch.save(policy.state_dict(), "./trained/lazyGO_{}_{}_{}.pth".format(lr, betas[0], betas[1]))
     print("====================saved successfully!====================")
