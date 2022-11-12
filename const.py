@@ -7,5 +7,5 @@ betas = (0.9, 0.999)
     
 random_seed = 543
 
-EPISODE = 3000
+EPISODE = 300000
 STEPS = 100

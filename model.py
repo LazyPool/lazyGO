@@ -12,7 +12,7 @@ class ActorCritic(nn.Module):
         self.affline = nn.Linear(sDim, 512)
 
         self.action_layer = nn.Linear(512, aDim)
-        self.value_layer = nn.Linear(512, 1)
+        self.value_layer = nn.Linear(512 + 1, 1)
 
         self.logprobs = []
         self.state_values = []
@@ -21,16 +21,21 @@ class ActorCritic(nn.Module):
 
     def forward(self, state):
         state = self.flatten(state)
-        state = F.relu(self.affline(state))
+        fstate = F.relu(self.affline(state))
 
-        state_value = self.value_layer(state)
-        
-        action_probs = F.softmax(self.action_layer(state), dim=0)
+        actionsAll = self.action_layer(fstate)
+        actionsCan = actionsAll - state * 999999.
+
+        action_probs = F.softmax(actionsCan, dim=0)
         action_distribution = Categorical(action_probs)
 
         action = action_distribution.sample()
 
         self.logprobs.append(action_distribution.log_prob(action))
+
+        vstate = torch.concat([fstate, torch.tensor([action])])
+        state_value = self.value_layer(vstate)
+
         self.state_values.append(state_value)
 
         return action.item()
