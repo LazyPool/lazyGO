@@ -33,6 +33,7 @@ class ActorCritic(nn.Module):
         self.logprobs.append(action_distribution.log_prob(action))
         self.state_values.append(state_value)
 
+        print(action)
         return action.item()
 
 
