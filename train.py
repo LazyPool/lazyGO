@@ -47,7 +47,7 @@ def train():
         optimizer.step()        
         policy.clearMemory()
 
-        if running_reward > 80: print("the train stop advancedly!"); break
+        if running_reward > 400: print("the train stop advancedly!"); break
         if episode % 20 == 0: 
             print("\t\tepisode: {}     average return: {}".format(episode, running_reward/20))
             running_reward = 0
