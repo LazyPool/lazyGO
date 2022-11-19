@@ -66,4 +66,4 @@ class ActorCritic(nn.Module):
     def clearMemory(self):
         del self.logprobs[:]
         del self.state_values[:]
-        del self.rewards[:]
+        del self.rewards[:] 
