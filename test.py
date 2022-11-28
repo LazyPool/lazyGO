@@ -17,7 +17,7 @@ aDim = env.action_space.n
 ac = model.ActorCritic(sDim, aDim, device)
 
 
-ac.load('./trained/actor/actor.pth', './trained/actor/critic.pth')
+ac.load('./trained/actor/actor.pth', './trained/critic/critic.pth')
 
 
 for _ in range(10):
