@@ -28,7 +28,7 @@ class lazyGO(gym.Env):
         self._board = np.array([[0 for c in range(self.size)] for r in range(self.size)])
 
         observation = self._get_obs()
-        info = self._get_info()
+        info = {0:"game start!"}
 
         if self.render_mode == "human":
             self._render_frame()
@@ -42,7 +42,7 @@ class lazyGO(gym.Env):
         try:
             assert self._board[row][col] == 0, "cannot move"
         except AssertionError:
-            return self._get_obs(), -25, True, False, {}
+            return self._get_obs(), -25, True, False, {0:"wrong place!"}
 
         self._board[row][col] = 1
         
@@ -55,7 +55,7 @@ class lazyGO(gym.Env):
 
         observation = self._get_obs()
         reward, terminated = self._get_check()
-        info = self._get_info()
+        info = self._get_info(reward)
 
         if self.render_mode == "human":
             self._render_frame()
@@ -78,6 +78,16 @@ class lazyGO(gym.Env):
         return self._board
 
 
+    def _get_info(self, reward):
+        if reward == 15:
+            return {0:"black win!"}
+        if reward == -15:
+            return {0:"red win!"}
+        if reward == 0:
+            return {0:"equal!"}
+        return {}
+
+
     def _get_check(self):
         if self._linked(1):
             reward, terminated = 15, True
@@ -89,10 +99,6 @@ class lazyGO(gym.Env):
             reward, terminated = -1, False
 
         return reward, terminated
-
-    
-    def _get_info(self):
-        return {}
 
 
     def _linked(self, who):

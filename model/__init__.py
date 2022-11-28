@@ -1,1 +1,1 @@
-from model.ac import acNet
+from model.ac import ActorCritic
